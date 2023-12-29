@@ -1,0 +1,200 @@
+#define _CRT_SECURE_NO_DEPRECATE
+#include <locale.h>
+#include <stdio.h>
+#include<io.h>
+#include<math.h>
+
+struct Laminate {
+    float length_lam;/*длина ламината*/
+    float width_lam;/*ширина ламината*/
+    float area_laminate;/*площадь одно плашки(достки) ламината*/
+    float laminate_quantity;
+};
+
+struct Room {
+    float length_r;/*длина комнаты*/
+    float width_r;/*ширина комнаты*/
+    float area_room;/*площадь комнаты*/
+};
+
+
+float enterLaminateSize(struct Laminate* laminate);
+float selectRoomShape(struct Room* room, struct Room* room2, struct Room* room3);
+float LaminateQuantity(struct Room* room, struct Laminate* laminate);
+float createReport(struct Laminate* laminate, struct Room* room, struct Room* room2, struct Room* room3);
+
+
+int main()
+{
+    setlocale(LC_ALL, "RUS");
+    int num;
+
+    struct Room room;
+    struct Room room2;
+    struct Room room3;
+    struct Laminate laminate;
+    printf("Калькулятор расчета количества ламината\n");
+    
+    enterLaminateSize(&laminate);
+    selectRoomShape(&room, &room2, &room3);
+    
+    printf("\nМеню действий:\n");
+    printf("1.Изменить размеры плашки\n");
+    printf("2.Изменить форму комнаты и размеры\n");
+    printf("3.Рассчитать количество ламината\n");
+    printf("4.Создать отчёт\n");
+    printf("5.Выйти из программы\n");
+    
+
+    do
+    {
+        printf("\nВыберите действие: ");
+        scanf("%d", &num);
+        switch (num)
+        {
+        case 1:
+            enterLaminateSize(&laminate);
+            break;
+        case 2:
+            selectRoomShape(&room, &room2, &room3);
+            break;
+        case 3:
+            if (room.area_room > 0 && laminate.area_laminate > 0)
+            {
+                printf("Количество плашек : %.0f \n", LaminateQuantity(&room, &laminate));
+                break;
+            }
+            else 
+            {
+                printf("Данные введены не правильно");
+                break;
+            }
+        case 4:
+            createReport(&laminate, &room, &room2, &room3);
+            break;
+        case 5:
+            break;
+        default:
+            printf("Данного действия нет\n");
+            break;
+        }       
+    } while (num != 5);
+}
+
+//ввод размеров плашки
+float enterLaminateSize(struct Laminate* laminate)
+{
+    puts("\nВведите размеры плашки ламината (в мм)");
+    puts("Длина плашка:");
+    scanf("%f", &laminate->length_lam);
+    puts("\nШирина плашка:");
+    scanf("%f", &laminate->width_lam);
+    laminate->area_laminate = (laminate->length_lam/1000.) * (laminate->width_lam/1000.);/*Площадь одной плитки ламината*/
+    return laminate->area_laminate;
+}
+
+//выбор формы комнаты и расчёт её площади
+float selectRoomShape(struct Room* room, struct Room* room2, struct Room* room3)
+{
+    int form;
+    puts("\nФорма комнаты:");
+    puts("1.Прямоугольная");
+    puts("2.Квадратная");
+    puts("3.L - образная");
+    puts("4.T - образная");
+    puts("5.U - образная");
+    scanf("%d", &form);
+    switch (form)
+    {
+    case 1:
+        puts("\nВведите длина комнаты(м):");
+        scanf("%f", &room->length_r);
+        puts("Введите ширину комнаты(м):");
+        scanf("%f", &room->width_r);
+        room->area_room = room->length_r * room->width_r;
+        return room->area_room;
+
+    case 2:
+        puts("\nДлина комнаты (м):");
+        scanf("%f", &room->length_r);
+        puts("Ширина комнаты (м):");
+        scanf("%f", &room->width_r);
+        room->area_room = room->length_r * room->width_r;
+        return room->area_room;    
+    case 3:
+        puts("\nЧтобы ввести данные данной комнаты, нужно визуально разделите её на 2 прямоуголька.");
+        puts("Введите длина и ширину 1 прямоуголька(м):");
+        scanf("%f %f", &room->length_r, &room->width_r);
+        puts("Введите длина и ширину 2 прямоуголька(м):");
+        scanf("%f %f", &room2->length_r, &room2->width_r);
+        room->area_room = (room->length_r * room->width_r) + (room2->length_r * room2->width_r);
+        return room->area_room;
+    case 4:
+        puts("\nЧтобы ввести данные данной комнаты, нужно визуально разделите её на 2 прямоуголька.\n");
+        puts("Введите длина и ширину 1 прямоуголька(м):");
+        scanf("%f %f", &room->length_r, &room->width_r);
+        puts("\nВведите длина и ширину 2 прямоуголька(м):");
+        scanf("%f %f", &room2->length_r, &room2->width_r);
+        room->area_room = (room->length_r * room->width_r) + (room2->length_r * room2->width_r);
+        return room->area_room;
+
+    case 5:
+        puts("Чтобы ввести данные данной комнаты, нужно визуально разделите её на 3 прямоуголька.\n");
+        puts("Введите длина и ширину 1 прямоуголька(м):");
+        scanf("%f %f", &room->length_r, &room->width_r);
+        puts("Введите длина и ширину 2 прямоуголька(м):");
+        scanf("%f %f", &room2->length_r, &room2->width_r);
+        puts("Введите длина и ширину 3 прямоуголька(м):");
+        scanf("%f %f", &room3->length_r, &room3->width_r);
+        room->area_room = (room->length_r * room->width_r) + (room2->length_r * room2->width_r) + (room3->length_r * room3->width_r);
+        return room->area_room;
+
+    default:
+        printf("Такой комнаты нет\n");
+        return 0;
+
+    }
+}
+//расчёт количества ламината
+float LaminateQuantity(struct Room* room, struct Laminate* laminate)
+{
+    float trimming, sum;
+    float a = 0.05;
+    trimming = room->area_room * a; /*урезка площади комнаты на 5%*/
+    sum = room->area_room + trimming;/*сумма площади комнаты с добавлением 5% от площади комнаты у*/
+    laminate->laminate_quantity = ceil(sum / laminate->area_laminate); /*количество досок ламината*/
+    return laminate->laminate_quantity;
+}
+//запись данных в файл
+float createReport(struct Laminate* laminate, struct Room* room, struct Room* room2, struct Room* room3)
+{
+    char filename[20] = "report.txt";
+    FILE* file_quantityLam;
+
+    if ((file_quantityLam = fopen(filename, "w")) == NULL)
+    {
+        puts("При открытии файла произошла ошибка\n");
+        return 0;
+    }
+    else
+    {
+        fprintf(file_quantityLam, "Размеры плашки ламината(в мм): %.2f %.2f\n", laminate->length_lam, laminate->width_lam);
+        if (room->length_r > 0, room->width_r > 0, room2->length_r > 0, room2->width_r > 0, room3->length_r > 0, room3->width_r > 0)
+            fprintf(file_quantityLam, "Размеры комнаты (в мм): %.2f %.2f %.2f %.2f %.2f %.2f\n", room->length_r, room->width_r, room2->length_r, room2->width_r, room3->length_r, room3->width_r);
+        else if (room->length_r > 0, room->width_r > 0, room2->length_r > 0, room2->width_r > 0)
+            fprintf(file_quantityLam, "Размеры комнаты (в мм): %.2f %.2f %.2f %.2f\n", room->length_r, room->width_r, room2->length_r, room2->width_r);
+        else if (room->length_r > 0, room->width_r > 0)
+            fprintf(file_quantityLam, "Размеры комнаты (в мм): %.2f %.2f\n", room->length_r, room->width_r);
+        fprintf(file_quantityLam, "Количество досок: %.0f\n", laminate->laminate_quantity);
+        printf("Отчет успешно создан\n");
+
+        if (fclose(file_quantityLam) == 0) {
+            return 1;
+        }
+        else
+        {
+            printf("Неудалось закрыть файл");
+            return 0;
+        }
+    }
+}
