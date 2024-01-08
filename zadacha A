@@ -34,17 +34,17 @@ int main()
     struct Room room3;
     struct Laminate laminate;
     printf("Калькулятор расчета количества ламината\n");
-    
+
     enterLaminateSize(&laminate);
     selectRoomShape(&room, &room2, &room3);
-    
+
     printf("\nМеню действий:\n");
     printf("1.Изменить размеры плашки\n");
     printf("2.Изменить форму комнаты и размеры\n");
     printf("3.Рассчитать количество ламината\n");
     printf("4.Создать отчёт\n");
     printf("5.Выйти из программы\n");
-    
+
 
     do
     {
@@ -64,20 +64,29 @@ int main()
                 printf("Количество плашек : %.0f \n", LaminateQuantity(&room, &laminate));
                 break;
             }
-            else 
+            else
             {
-                printf("Данные введены не правильно");
+                printf("Данные введены неправильно");
                 break;
             }
         case 4:
-            createReport(&laminate, &room, &room2, &room3);
-            break;
+            if (room.area_room > 0 && laminate.area_laminate > 0 && laminate.laminate_quantity > 0)
+            {
+                createReport(&laminate, &room, &room2, &room3);
+                break;
+            }
+            else
+            {
+                printf("Не удалось создать отчёт");
+                break;
+            }
+            
         case 5:
             break;
         default:
             printf("Данного действия нет\n");
             break;
-        }       
+        }
     } while (num != 5);
 }
 
@@ -89,7 +98,7 @@ float enterLaminateSize(struct Laminate* laminate)
     scanf("%f", &laminate->length_lam);
     puts("\nШирина плашка:");
     scanf("%f", &laminate->width_lam);
-    laminate->area_laminate = (laminate->length_lam/1000.) * (laminate->width_lam/1000.);/*Площадь одной плитки ламината*/
+    laminate->area_laminate = (laminate->length_lam / 1000.) * (laminate->width_lam / 1000.);/*Площадь одной плитки ламината*/
     return laminate->area_laminate;
 }
 
@@ -120,7 +129,7 @@ float selectRoomShape(struct Room* room, struct Room* room2, struct Room* room3)
         puts("Ширина комнаты (м):");
         scanf("%f", &room->width_r);
         room->area_room = room->length_r * room->width_r;
-        return room->area_room;    
+        return room->area_room;
     case 3:
         puts("\nЧтобы ввести данные данной комнаты, нужно визуально разделите её на 2 прямоуголька.");
         puts("Введите длина и ширину 1 прямоуголька(м):");
